@@ -5,11 +5,46 @@
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
   </head>
+ <script type="text/javascript">
+var lastResFind=""; // последний удачный результат
+var copy_page=""; // копия страницы в ихсодном виде
+function TrimStr(s) {
+     s = s.replace( /^\s+/g, '');
+  return s.replace( /\s+$/g, '');
+}
+function FindOnPage(inputId) {//ищет текст на странице, в параметр передается ID поля для ввода
+  var obj = window.document.getElementById(inputId);
+  var textToFind;
+ 
+  if (obj) {
+    textToFind = TrimStr(obj.value);//обрезаем пробелы
+  } else {
+    alert("Введенная фраза не найдена");
+    return;
+  }
+  if (textToFind == "") {
+    alert("Вы ничего не ввели");
+    return;
+  }
+  
+  if(document.body.innerHTML.indexOf(textToFind)=="-1")
+  alert("К сожалению, по вашему запросу ничего не найдено.");
+  
+  if(copy_page.length>0)
+        document.body.innerHTML=copy_page;
+  else copy_page=document.body.innerHTML;
+
+  
+  document.body.innerHTML = document.body.innerHTML.replace(eval("/name="+lastResFind+"/gi")," ");//стираем предыдущие якори для скрола
+  document.body.innerHTML = document.body.innerHTML.replace(eval("/"+textToFind+"/gi"),"<a name="+textToFind+" style='background:red'>"+textToFind+"</a>"); //Заменяем найденный текст ссылками с якорем;
+  lastResFind=textToFind; // сохраняем фразу для поиска, чтобы в дальнейшем по ней стереть все ссылки
+  window.location = '#'+textToFind;//перемещаем скрол к последнему найденному совпадению
+ } 
+</script>
   <body>
 	  <div class="container">
 	  	<header> 	
-	 		<marquee><h1>VL.K</h1></marquee>
-
+	 		<h1>VL.K</h1>
 	  	</header>
 	  	<div class="navbar navbar-static-top">
 	  		<nav class="navbar-inner">
@@ -17,27 +52,19 @@
 	  		<a href="index.html"><button type="button" class="btn btn-primary" style="color:white;background:black">Основная</button></a>
 	    	<a href="archive.html"><button type="button" class="btn btn-primary" style="color:white;background:black">Все произведения</button></a>
 	    	<a href="contacts.html"><button type="button" class="btn btn-primary" style="color:white;background:black">Контакты</button></a>
-	   			 <!--<form class="pull-right">
-	  				<input type="text" class="search-query;form-control" placeholder="Введите запрос" /> 
-	  				<button type="submit" class="btn" style="color:white;background:black">Поиск</button>
-	  			</form> --> 
-	  			<form action="" class="pull-right" >
-			  		<div class="form-group ">
-			  			<input type="text" class="form-control" placeholder="E-mail">
-			  			<input type="password" class="form-control" placeholder="Пароль">
-			  		</div>
-			  		 <button type="submit" class="bnt btn-primary pull-right" style="background: black">
-			  			<i class="fa fa-sign-in"></i>ВОЙТИ
-			  		 </button>
-			  	</form>
-	    		</ul>		
+	    	<a href="reg.html"><button type="button" class="btn btn-primary pull-right" style="color:white;background:black">Регистрация</button></a>
+	    	</ul>		
 
 	  		</nav>
 	  	</div>
-	  	<form class="form-search pull-right">
-  			<input type="text" class="input-medium search-query">
-  			<button type="submit" class="btn">Найти</button>
-		</form>
+	  		<form class="form-search pull-right">
+	  		<input type="text" id="text-to-find" value="" placeholder="Введите ключевое слово"> 
+			<input type="button" onclick="javascript: FindOnPage('text-to-find'); return false;" value="Поиск"  />
+			<hr/>
+			</form>
+		<div>
+		<br>
+		</div>
 	  <div class="carousel slide" id="myCarousel">
 	  		<ol class="carousel-indicators">
 	  			<li class="active" data-target="#myCarousel" data-clide-to="0"></li>
@@ -75,7 +102,7 @@
 
 	  			</div>
 	  			<div class="item">
-	  				<center><img src="img/13.jpg"/></center>
+	  				<center><img src="img/3.jpg"/></center>
 	  				<div class=carousel-caption>
 	  					<h4 style="color:black">Рассвет</h4>
 	  					<p style="color:black"><big>За тьмой всегда наступит светлый миг</big>.</p>
